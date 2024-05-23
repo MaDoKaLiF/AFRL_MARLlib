@@ -36,6 +36,7 @@ class AgentSelector:
 
     def reset(self) -> Any:
         """Reset to the original order."""
+        
         self.reinit(self.agent_order)
         return self.next()
 

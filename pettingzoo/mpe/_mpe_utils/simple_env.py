@@ -9,7 +9,7 @@ from gymnasium.utils import seeding
 from pettingzoo import AECEnv
 from pettingzoo.mpe._mpe_utils.core import Agent
 from pettingzoo.utils import wrappers
-from pettingzoo.utils.agent_selector import AgentSelector
+from pettingzoo.utils.agent_selector import AgentSelector #
 
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -75,7 +75,6 @@ class SimpleEnv(AECEnv):
         self._index_map = {
             agent.name: idx for idx, agent in enumerate(self.world.agents)
         }
-
         self._agent_selector = AgentSelector(self.agents)
 
         # set spaces
@@ -155,8 +154,8 @@ class SimpleEnv(AECEnv):
         self.terminations = {name: False for name in self.agents}
         self.truncations = {name: False for name in self.agents}
         self.infos = {name: {} for name in self.agents}
-
-        self.agent_selection = self._agent_selector.reset()
+        self._agent_selector.reinit(self.agents)
+        self.agent_selection = self._agent_selector.next()
         self.steps = 0
 
         self.current_actions = [None] * self.num_agents
