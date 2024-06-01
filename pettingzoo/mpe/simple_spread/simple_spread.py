@@ -66,7 +66,7 @@ from pettingzoo.utils.conversions import parallel_wrapper_fn
 class raw_env(SimpleEnv, EzPickle):
     def __init__(
         self,
-        N=5,
+        N=4,
         local_ratio=0.5,
         max_cycles=25,
         continuous_actions=False,
@@ -102,7 +102,7 @@ parallel_env = parallel_wrapper_fn(env)
 
 
 class Scenario(BaseScenario):
-    def make_world(self, N=5):
+    def make_world(self, N=4):
         world = World()
         # set any world properties first
         world.dim_c = 2
@@ -164,24 +164,23 @@ class Scenario(BaseScenario):
         world.del_landmark_que.add(landmark.name)
 
     def update_que(self, world, simpleenv, np_random):
-        return None
+        #return None
         # This method will be called right after world.step, you can fill world.add_agent_que or world.del_agent_que to add delete agent
         # You can get information of current world / environment through world / simpleenv args.
         # return 
         #ex:
-        # for agent in world.agents:
-        #     if agent.state.p_pos[0] < -100 and agent.state_p_pos[1] < -100: # under certain condition, delete that agent
-        #         self.kill_agent(world,agent)
+        for agent in world.agents:
+            if agent.state.p_pos[0] < -100 and agent.state_p_pos[1] < -100: # under certain condition, delete that agent
+                self.kill_agent(world,agent)
         
-        # #for testing
-        # if simpleenv.steps == 4:
-        #     self.add_new_agent(world, np_random)
-        #     self.add_new_agent(world, np_random)
-        #     self.add_new_landmark(world, np_random)
+        #for testing
+        if simpleenv.steps == 4:
+            self.add_new_agent(world, np_random)
+            self.add_new_landmark(world, np_random)
         
-        # if simpleenv.steps == 9:
-        #     self.kill_agent(world, world.agents[1])
-        #     self.kill_landmark(world, world.landmarks[0])
+        if simpleenv.steps == 9:
+            self.kill_agent(world, world.agents[1])
+            self.kill_landmark(world, world.landmarks[0])
 
     def reset_world(self, world, np_random):
         # random properties for agents
@@ -253,9 +252,13 @@ class Scenario(BaseScenario):
     def observation(self, agent, world):
         # get positions of all entities in this agent's reference frame
         # relpos of other agents
+        #other_pos = [[-100,100],[-100,100],[-100,100],[-100,100],[-100,100],[-100,100],[-100,100]]
         other_pos = []
+
         for other in world.agents:
             if other is agent:
+                print('agent',agent)
+                print('other_pos',other_pos)
                 continue
             other_pos.append(other.state.p_pos - agent.state.p_pos)
             # other_pos.append(world.get_relpos(other, agent))
